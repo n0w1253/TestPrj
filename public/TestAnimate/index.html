@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="../bower_components/angular/angular.min.js"></script>
+  <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
+  <script src="app.js"></script>
+</head>
+<body class="container" ng-app="animateApp" ng-controller="mainController">
+
+  <header class="text-center">
+    <h1>Animating Angular Apps<small>ngShow and ngHide</small></h1>
+    <a class="btn btn-primary" href="#" ng-click="lions = !lions" ng-class="{ active: lions }">Toggle Lions</a>
+    <a class="btn btn-success" href="#" ng-click="cranes = !cranes" ng-class="{ active: cranes }">Toggle Cranes</a>
+  </header>  
+  
+  <div class="row">
+    <div class="col-xs-6">
+    
+      <div class="jumbotron" ng-show="lions">
+        <img src="http://scotch.io/wp-content/uploads/2014/07/14514600585_49ba9f860c.jpg" class="img-responsive img-thumbnail">
+      </div>
+      
+    </div>
+    <div class="col-xs-6">
+    
+      <div class="jumbotron" ng-show="cranes">
+        <img src="http://scotch.io/wp-content/uploads/2014/07/cranes.jpg" class="img-responsive img-thumbnail">
+      </div>
+      
+    </div>
+  </div>
+  
+</body>
+</html>

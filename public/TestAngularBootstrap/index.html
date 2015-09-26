@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+         <!-- CSS (load bootstrap) -->
+         
+<link rel='stylesheet prefetch' href='../bower_components/bootswatch/paper/bootstrap.min.css'>
+
+    <link rel="stylesheet" href="style.css"/>
+
+    <!-- JS (load angular, ui-router, and our custom js file) -->
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="app.js"></script>
+    </head>
+    <body>
+        <div class="container" ng-app="app" ng-controller="mainController">
+
+            <div class="text-center">
+                <p>Example of Angular and the normal Bootstrap JavaScript components</p>
+                <p class="text-success">This will work</p>
+            </div>
+
+            <h2>Buttons</h2>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary" ng-model="bigData.breakfast" btn-checkbox>
+                    Breakfast
+                </label>
+                <label class="btn btn-primary" ng-model="bigData.lunch" btn-checkbox>
+                    Lunch
+                </label>
+                <label class="btn btn-primary" ng-model="bigData.dinner" btn-checkbox>
+                    Dinner
+                </label>
+            </div>
+
+            <pre><code>{{ bigData | json }}</code></pre>
+
+            <h2>Collapse</h2>
+
+            <a href="#" class="btn btn-primary" ng-click="isCollapsed = !isCollapsed">
+                Toggle Panel
+            </a>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a href="#" ng-click="isCollapsed = !isCollapsed">
+                            Collapsible Group Item #1
+                        </a>
+                    </h4>
+                </div>
+                <div collapse="isCollapsed">
+                    <div class="panel-body">Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+
+            <pre><code>{{ isCollapsed }}</code></pre>
+
+        </div>
+    </body>
+</html>
