@@ -5,14 +5,21 @@
         <tr>
             <th>Name</th>
             <th>Cost</th>
+
+            <th>
+                <input type="checkbox" ng-model="allItemsSelected" ng-change="selectAll()">
+            </th>
         </tr>
     </thead>
     <tbody>
-    
-        <tr ng-repeat="scotch in scotches">
-            <td>{{ scotch.name }}</td>
-            <td>${{ scotch.price }}</td>
+
+        <tr ng-repeat="scotch in scotches" ng-class="{selected: scotch.isChecked}>
+            <td>{{ scotch.name}}</td>
+            <td>${{ scotch.price}}</td>
+            <td><input type="checkbox" ng-model="scotch.selected" ng-change="selectEntity()"/></td>
+            <td><input type="submit" value="Add to basket" ng-click="addToBasket(product)" /></td>
+            <!--td><pre><code>{{ scotch | json }}</code></pre></td-->
         </tr>
-        
+
     </tbody>
 </table>
