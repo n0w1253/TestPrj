@@ -1,0 +1,32 @@
+<h2>Basket Content</h2>
+
+<table class="table table-hover table-striped table-condensed">
+    <thead class="bg-success">
+        <tr>
+            <th>Name</th>
+            <th>Cost</th>
+
+            <th title="remove all">
+                 <a href="" ng-click="removeAllItems()" >
+                            <i class="fa fa-minus-square"></i>
+                        </a>
+                <!--input type="checkbox" ng-model="allItemsSelected" ng-change="selectAll()"-->
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr ng-repeat="scotch in scotches">
+            <td>{{ scotch.name}}</td>
+            <td>${{ scotch.price}}</td>
+            <td  title="remove">
+                        <a href="" ng-click="removeItem(scotch)" >
+                            <i class="fa fa-minus-square"></i>
+                        </a>
+            </td>
+          
+        </tr>            <!--td><pre><code>{{ scotch | json }}</code></pre></td-->
+
+
+    </tbody>
+</table>

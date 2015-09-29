@@ -30,27 +30,37 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
 
 
             // ABOUT PAGE AND MULTIPLE NAMED VIEWS =================================
-            .state('about', {
-                url: '/about',
+            .state('products', {
+                url: '/products',
                 views: {
                     // the main template will be placed here (relatively named)
-                    '': {templateUrl: 'partial-about.html'},
+                    '': {templateUrl: 'partial-products.html'},
                     // the child views will be defined here (absolutely named)
-                    'columnOne@about': {template: 'Item Info Here!'},
+                    'columnRight@products': {template: 'Item Info Here!'},
                     // for column two, we'll define a separate controller 
-                    'columnTwo@about': {
+                    'columnLeft@products': {
                         templateUrl: 'table-data.html',
                         controller: 'scotchController'
                     }
                 }
 
             })
-            
+
             // HOME STATES AND NESTED VIEWS ========================================
             .state('basket', {
                 url: '/basket',
-                templateUrl: 'partial-basket.html',
-                controller: 'basketCtrl'
+                views: {
+                    // the main template will be placed here (relatively named)
+                    '': {templateUrl: 'partial-basket.html'},
+                    // the child views will be defined here (absolutely named)
+                    'columnRight@basket': {template: 'Advertisement! Just Kidding!'},
+                    // for column two, we'll define a separate controller 
+                    'columnLeft@basket': {
+                        templateUrl: 'basket-data.html',
+                        controller: 'basketCtrl'
+                    }
+                }
+
             });
 
 });
@@ -70,19 +80,7 @@ routerApp.controller('scotchController', function ($scope, BasketService) {
 // Fired when an entity in the table is checked
     $scope.selectEntity = function () {
         BasketService.updateSelectedList($scope.scotches);
-      /*  // If any entity is not checked, then uncheck the "allItemsSelected" checkbox
-        for (var i = 0; i < $scope.scotches.length; i++) {
-            if (!$scope.scotches[i].selected) {
-                $scope.allItemsSelected = false;
-                BasketService.updateSelectedList($scope.scotches);
-                return;
-            }
-        }
-
-        // ... otherwise ensure that the "allItemsSelected" checkbox is checked
-        BasketService.updateSelectedList($scope.scotches);
-        $scope.allItemsSelected = true;
-        */
+       
     };
 
     // Fired when the checkbox in the table header is checked
@@ -91,23 +89,32 @@ routerApp.controller('scotchController', function ($scope, BasketService) {
         for (var i = 0; i < $scope.scotches.length; i++) {
             $scope.scotches[i].selected = $scope.allItemsSelected;
         }
-        
+
         BasketService.updateSelectedList($scope.scotches);
     };
 
-    $scope.$on('handleItemCount', function() {
+    $scope.$on('handleItemCount', function () {
         $scope.allItemsSelected = BasketService.allSelected();
     });
 });
 
 routerApp.controller('basketCtrl', function ($scope, BasketService) {
     $scope.itemCnt = BasketService.getSelectedCnt();
-    
+
     $scope.scotches = BasketService.getSelectedList();
-    
-    $scope.$on('handleItemCount', function() {
+
+    $scope.$on('handleItemCount', function () {
         $scope.itemCnt = BasketService.getSelectedCnt();
+        $scope.scotches = BasketService.getSelectedList();
     });
+
+    $scope.removeItem = function (value) {
+        BasketService.unselect(value);
+    };
+
+    $scope.removeAllItems = function () {
+        BasketService.unselectAll();
+    };
 });
 
 routerApp.service('BasketService', function ($rootScope) {
@@ -128,20 +135,16 @@ routerApp.service('BasketService', function ($rootScope) {
         }
     ];
 
-    var selectedList = []; 
-    
+    var selectedList = [];
+
     var allSelected = false;
 
-   /* this.setSelectedList = function (value) {
-        selectedList = this.getSelectedList(value);
-        
-    };*/
  
-    this.getList = function(){
+    this.getList = function () {
         return scotches;
     };
-    
-    this.getSelectedList = function(){
+
+    this.getSelectedList = function () {
         return selectedList;
     };
 
@@ -154,14 +157,14 @@ routerApp.service('BasketService', function ($rootScope) {
 
         selectedList = ret;
         //debug
-   
+
         console.log("selected " + selectedList.length);
-       
-         
-        
-         var all_selected = true;
-         for (var i = 0; i < scotches.length; i++) {
-            if (!scotches[i].selected) {                
+
+
+
+        var all_selected = true;
+        for (var i = 0; i < scotches.length; i++) {
+            if (!scotches[i].selected) {
                 all_selected = false;
                 break;
             }
@@ -169,8 +172,8 @@ routerApp.service('BasketService', function ($rootScope) {
 
         allSelected = all_selected;
         console.log("allSelected is " + allSelected);
-         this.broadcastItemCount();
-        
+        this.broadcastItemCount();
+
         return ret;
     };
 
@@ -182,12 +185,28 @@ routerApp.service('BasketService', function ($rootScope) {
         console.log("get selected " + selectedList.length);
         return selectedList.length;
     };
-    
+
     this.allSelected = function () {
         console.log("get allSelected " + allSelected);
         return allSelected;
-        // If any entity is not checked, then uncheck the "allItemsSelected" checkbox
-       
+   
+    };
+
+    this.unselect = function (value) {
+        for (var i = 0; i < scotches.length; i++) {
+            if (JSON.stringify(scotches[i]) === JSON.stringify(value)) {
+                scotches[i].selected = false;
+                break;
+            }
+        }
+        this.updateSelectedList(scotches);
+    };
+
+    this.unselectAll = function () {
+        for (var i = 0; i < scotches.length; i++) {
+            scotches[i].selected = false;
+        }
+        this.updateSelectedList(scotches);
     };
 });
 

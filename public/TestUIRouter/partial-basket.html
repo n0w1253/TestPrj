@@ -1,25 +1,22 @@
-<h2>Basket Content</h2>
+<!-- partial-about.html -->
 
-<table class="table table-hover table-striped table-condensed">
-    <thead class="bg-success">
-        <tr>
-            <th>Name</th>
-            <th>Cost</th>
+<!--div class="jumbotron text-center">
+    <h1>The About Page</h1>
+    <p>This page demonstrates <span class="text-danger">multiple</span> and <span class="text-danger">named</span> views.</p>
+</div-->
 
-            <th>
-                <!--input type="checkbox" ng-model="allItemsSelected" ng-change="selectAll()"-->
-            </th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="row">
 
-        <tr ng-repeat="scotch in scotches">
-            <td>{{ scotch.name}}</td>
-            <td>${{ scotch.price}}</td>
-            
-          
-        </tr>            <!--td><pre><code>{{ scotch | json }}</code></pre></td-->
+   
+    
+    <!-- COLUMN LEFT NAMED VIEW -->
+    <div class="col-sm-9">
+        <div ui-view="columnLeft" ></div>
+    </div>
+    
+     <!-- COLUMN RIGHT NAMED VIEW -->
+    <div class="col-sm-3">
+        <div ui-view="columnRight"></div>
+    </div>
 
-
-    </tbody>
-</table>
+</div> 

@@ -29,19 +29,13 @@
             </div>
             <ul class="nav navbar-nav">
                 <li><a ui-sref="home" ui-sref-active="active">Home</a></li>
-                <li><a ui-sref="about" ui-sref-active="active">About</a></li>
+                <li><a ui-sref="products" ui-sref-active="active">Products</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-
-                <li><a ui-sref="basket" ui-sref-active="active"><i class="fa fa-calendar"></i> Selected
-                        <span ng-controller="basketCtrl" ng-model="itemCnt">({{itemCnt}} items)</span>
+                <li><a ui-sref="basket" ui-sref-active="active"><i class="fa fa-calendar"></i> Selected <span ng-controller="basketCtrl" ng-model="itemCnt">({{itemCnt}} items)</span>
                     </a>
                 </li>
-                <!--a href="#basket">
-                       <i class="fa fa-shopping-cart"></i> Basket
-                       <span ng-controller="BasketController">({{basketItemCount}} items)</span>
-               </a-->
             </ul>
         </nav>
 
