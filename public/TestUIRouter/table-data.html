@@ -30,7 +30,7 @@
     </thead>
     <tbody>
 
-        <tr ng-repeat="scotch in scotches | filter:query | orderBy:orderProp" ng-class="{selected: scotch.selected}">
+        <tr ng-repeat="scotch in scotches | filter:query | orderBy:orderProp" ng-class="{selected: scotch.selected}"  class="phone-listing">
             <td>{{ scotch.name}}</td>
             <td>${{ scotch.price}}</td>
             <td><input type="checkbox" ng-model="scotch.selected" ng-change="selectEntity()"/></td>
