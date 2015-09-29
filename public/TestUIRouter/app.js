@@ -189,6 +189,7 @@ routerApp.service('BasketService', function ($rootScope) {
 
     this.broadcastItemCount = function () {
         $rootScope.$broadcast('handleItemCount');
+      //  $rootScope.$emit('handleItemCount');
     };
 
     this.getSelectedCnt = function () {
