@@ -1,5 +1,22 @@
 <h2>Fine Scotches</h2>
 
+<div>
+    <span>Search: <input ng-model="query"></span>  
+    <span> Sort by:<select ng-model="orderProp">
+        <option value="name">Alphabetical</option>
+        <option value="price">Price</option>
+        </select> </span>
+  </div>
+<!--div>
+      
+      Search: <input ng-model="query">
+      Sort by:
+      <select ng-model="orderProp">
+        <option value="name">Alphabetical</option>
+        <option value="age">Newest</option>
+      </select>
+
+    </div-->
 <table class="table table-hover table-striped table-condensed">
     <thead class="bg-success">
         <tr>
@@ -13,7 +30,7 @@
     </thead>
     <tbody>
 
-        <tr ng-repeat="scotch in scotches" ng-class="{selected: scotch.selected}">
+        <tr ng-repeat="scotch in scotches | filter:query | orderBy:orderProp" ng-class="{selected: scotch.selected}">
             <td>{{ scotch.name}}</td>
             <td>${{ scotch.price}}</td>
             <td><input type="checkbox" ng-model="scotch.selected" ng-change="selectEntity()"/></td>

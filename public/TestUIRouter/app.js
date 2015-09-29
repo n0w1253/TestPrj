@@ -129,6 +129,16 @@ routerApp.service('BasketService', function ($rootScope) {
             selected: false
         },
         {
+            name: 'Highland Park',
+            price: 100,
+            selected: false
+        },
+        {
+            name: 'Aberfeldy 21',
+            price: 500,
+            selected: false
+        },
+        {
             name: 'Glenfiddich 1937',
             price: 20000,
             selected: false
