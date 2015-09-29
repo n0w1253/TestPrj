@@ -34,7 +34,10 @@
 
             <ul class="nav navbar-nav navbar-right">
 
-                <li><a href="#"><i class="fa fa-calendar"></i> Selected</a></li>
+                <li><a ui-sref="basket" ui-sref-active="active"><i class="fa fa-calendar"></i> Selected
+                        <span ng-controller="basketCtrl" ng-model="itemCnt">({{itemCnt}} items)</span>
+                    </a>
+                </li>
                 <!--a href="#basket">
                        <i class="fa fa-shopping-cart"></i> Basket
                        <span ng-controller="BasketController">({{basketItemCount}} items)</span>
