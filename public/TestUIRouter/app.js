@@ -1,5 +1,5 @@
 // app.js
-var routerApp = angular.module('routerApp', ['ui.router','ngAnimate']);
+var routerApp = angular.module('routerApp', ['ui.router', 'ngAnimate', 'ui.bootstrap']);
 
 routerApp.config(function ($stateProvider, $urlRouterProvider) {
 
@@ -7,6 +7,12 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
 
     $stateProvider
 
+            .state('home2', {
+                url: '/home2',
+                templateUrl: 'partial-home2.html',
+                controller: 'CarouselCtrl'
+            })
+            
             // HOME STATES AND NESTED VIEWS ========================================
             .state('home', {
                 url: '/home',
@@ -17,9 +23,7 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
             .state('home.list', {
                 url: '/list',
                 templateUrl: 'partial-home-list.html',
-                controller: function ($scope) {
-                    $scope.dogs = ['Bernese', 'Husky', 'Goldendoodle'];
-                }
+                controller: 'CarouselCtrl'
             })
 
             // nested list with just some random string data
@@ -80,7 +84,7 @@ routerApp.controller('scotchController', function ($scope, BasketService) {
 // Fired when an entity in the table is checked
     $scope.selectEntity = function () {
         BasketService.updateSelectedList($scope.scotches);
-       
+
     };
 
     // Fired when the checkbox in the table header is checked
@@ -149,7 +153,7 @@ routerApp.service('BasketService', function ($rootScope) {
 
     var allSelected = false;
 
- 
+
     this.getList = function () {
         return scotches;
     };
@@ -189,7 +193,7 @@ routerApp.service('BasketService', function ($rootScope) {
 
     this.broadcastItemCount = function () {
         $rootScope.$broadcast('handleItemCount');
-      //  $rootScope.$emit('handleItemCount');
+        //  $rootScope.$emit('handleItemCount');
     };
 
     this.getSelectedCnt = function () {
@@ -200,7 +204,7 @@ routerApp.service('BasketService', function ($rootScope) {
     this.allSelected = function () {
         console.log("get allSelected " + allSelected);
         return allSelected;
-   
+
     };
 
     this.unselect = function (value) {
@@ -221,3 +225,24 @@ routerApp.service('BasketService', function ($rootScope) {
     };
 });
 
+
+routerApp.controller('CarouselCtrl', function CarouselCtrl($scope) {
+    $scope.myInterval = 3000;
+    $scope.slides = [
+        {
+            image: '../images/img1.jpg'
+        },
+        {
+            image: '../images/img2.jpg'
+        },
+        {
+            image: '../images/img3.jpg'
+        },
+        {
+            image: '../images/img4.jpg'
+        },
+        {
+            image: '../images/img5.jpg'
+        }
+    ];
+});

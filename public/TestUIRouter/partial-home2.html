@@ -1,0 +1,22 @@
+<div class="container fill">
+
+    <div id="slides_control">
+        <div>
+
+            <carousel interval="myInterval">
+                <slide ng-repeat="slide in slides" active="slide.active">
+                     <a ui-sref="products" ui-sref-active="active">
+                        <div class="carousel-caption">
+                            <!--h4>Slide {{$index + 1}}</h4-->
+                             <h1 class="font1"> Start <i class="fa fa-angle-double-right"></i></h1>
+                        </div>
+                    </a>
+                    <img ng-src="{{slide.image}}">
+                   
+                </slide>
+            </carousel>
+
+        </div>
+    </div>
+
+</div>
