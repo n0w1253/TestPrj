@@ -1,5 +1,8 @@
 // app.js
-var routerApp = angular.module('routerApp', ['ui.router', 'ngAnimate', 'ui.bootstrap']);
+
+
+
+var routerApp = angular.module('routerApp', ['ui.router', 'ngAnimate', 'ui.bootstrap','myTable']);
 
 routerApp.config(function ($stateProvider, $urlRouterProvider) {
 
@@ -43,8 +46,8 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
                     'columnRight@products': {template: 'Item Info Here!'},
                     // for column two, we'll define a separate controller 
                     'columnLeft@products': {
-                        templateUrl: 'table-data.html',
-                        controller: 'scotchController'
+                        template: '<data-my-table></data-my-table>'
+                     //   controller: 'scotchController'
                     }
                 }
 
@@ -69,10 +72,68 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
 
 });
 
-// let's define the scotch controller that we call up in the about state
-routerApp.controller('scotchController', function ($scope, BasketService) {
+
+
+routerApp.controller('basketCtrl', function ($scope, BasketService) {
+    $scope.itemCnt = BasketService.getSelectedCnt();
+
+    $scope.scotches = BasketService.getSelectedList();
+
+    $scope.$on('handleItemCount', function () {
+        $scope.itemCnt = BasketService.getSelectedCnt();
+        $scope.scotches = BasketService.getSelectedList();
+    });
+
+    $scope.removeItem = function (value) {
+        BasketService.unselect(value);
+    };
+
+    $scope.removeAllItems = function () {
+        BasketService.unselectAll();
+    };
+});
+
+
+
+routerApp.controller('CarouselCtrl', function CarouselCtrl($scope) {
+    $scope.myInterval = 3000;
+    $scope.slides = [
+        {
+            image: '../images/img1.jpg'
+        },
+        {
+            image: '../images/img2.jpg'
+        },
+        {
+            image: '../images/img3.jpg'
+        },
+        {
+            image: '../images/img4.jpg'
+        },
+        {
+            image: '../images/img5.jpg'
+        }
+    ];
+});
+
+
+var myTable = angular.module('myTable',[]);
+myTable.directive('myTable', function() {
+    return {
+      scope: {
+        
+      },
+      templateUrl: 'table-data_1.html',
+      replace: true,
+      controller: 'scotchController',
+      controllerAs: 'ctrl'
+    };
+  });
+  
+myTable.controller('scotchController', function ($scope, BasketService) {
 
     $scope.message = 'test';
+    this.message="test2";
 
     $scope.scotches = BasketService.getList();
 
@@ -100,25 +161,6 @@ routerApp.controller('scotchController', function ($scope, BasketService) {
     $scope.$on('handleItemCount', function () {
         $scope.allItemsSelected = BasketService.allSelected();
     });
-});
-
-routerApp.controller('basketCtrl', function ($scope, BasketService) {
-    $scope.itemCnt = BasketService.getSelectedCnt();
-
-    $scope.scotches = BasketService.getSelectedList();
-
-    $scope.$on('handleItemCount', function () {
-        $scope.itemCnt = BasketService.getSelectedCnt();
-        $scope.scotches = BasketService.getSelectedList();
-    });
-
-    $scope.removeItem = function (value) {
-        BasketService.unselect(value);
-    };
-
-    $scope.removeAllItems = function () {
-        BasketService.unselectAll();
-    };
 });
 
 routerApp.service('BasketService', function ($rootScope) {
@@ -155,6 +197,7 @@ routerApp.service('BasketService', function ($rootScope) {
 
 
     this.getList = function () {
+        console.log("BasketServer scotches "+scotches.length);
         return scotches;
     };
 
@@ -225,46 +268,3 @@ routerApp.service('BasketService', function ($rootScope) {
     };
 });
 
-
-routerApp.controller('CarouselCtrl', function CarouselCtrl($scope) {
-    $scope.myInterval = 3000;
-    $scope.slides = [
-        {
-            image: '../images/img1.jpg'
-        },
-        {
-            image: '../images/img2.jpg'
-        },
-        {
-            image: '../images/img3.jpg'
-        },
-        {
-            image: '../images/img4.jpg'
-        },
-        {
-            image: '../images/img5.jpg'
-        }
-    ];
-});
-
-
-
-angular.module('myAppContestantEditor', [])
-  .directive('myAppContestantEditorForm', function() {
-    return {
-      scope: {
-        contestants: '='
-      },
-      templateUrl: 'my_app_contestant_editor.html',
-      replace: true,
-      controller: 'ContestantEditorFormCtrl',
-      controllerAs: 'ctrl'
-    };
-  })
-  .controller('ContestantEditorFormCtrl', function($scope) {
-    this.contestant = {};
-    this.save = function() {
-      $scope.contestants.push(this.contestant);
-      this.contestant = {};
-    };
-  });

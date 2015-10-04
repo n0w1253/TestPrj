@@ -1,0 +1,45 @@
+<div>
+<h2>Fine Scotches 2</h2>
+
+<div>
+    <span>Search: <input ng-model="query"></span>  
+    <span> Sort by:<select ng-model="orderProp">
+        <option value="name">Alphabetical</option>
+        <option value="price">Price</option>
+        </select> </span>
+  </div>
+<!--div>
+      
+      Search: <input ng-model="query">
+      Sort by:
+      <select ng-model="orderProp">
+        <option value="name">Alphabetical</option>
+        <option value="age">Newest</option>
+      </select>
+
+    </div-->
+<table class="table table-hover table-striped table-condensed">
+    <thead class="bg-success">
+        <tr>
+            <th>Name</th>
+            <th>Cost</th>
+
+            <th>
+                <input type="checkbox" ng-model="allItemsSelected" ng-change="selectAll()" ng-show="filteredList.length === scotches.length">
+            </th>
+           
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr ng-repeat="scotch in filteredList = (scotches | filter:query  | orderBy:orderProp) " ng-class="{selected: scotch.selected}"  class="phone-listing">
+            <td>{{ scotch.name}}</td>
+            <td>${{ scotch.price}}</td>
+            <td><input type="checkbox" ng-model="scotch.selected" ng-change="selectEntity()"/></td>
+          
+        </tr>            <!--td><pre><code>{{ scotch | json }}</code></pre></td-->
+
+
+    </tbody>
+</table>
+</div>
