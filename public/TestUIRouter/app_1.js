@@ -2,7 +2,7 @@
 
 
 
-var routerApp = angular.module('routerApp', ['ui.router', 'ngAnimate', 'ui.bootstrap','myTable']);
+var routerApp = angular.module('routerApp', ['ui.router', 'ngAnimate', 'ui.bootstrap', 'myTable']);
 
 routerApp.config(function ($stateProvider, $urlRouterProvider) {
 
@@ -15,7 +15,7 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
                 templateUrl: 'partial-home2.html',
                 controller: 'CarouselCtrl'
             })
-            
+
             // HOME STATES AND NESTED VIEWS ========================================
             .state('home', {
                 url: '/home',
@@ -46,8 +46,8 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
                     'columnRight@products': {template: 'Item Info Here!'},
                     // for column two, we'll define a separate controller 
                     'columnLeft@products': {
-                        template: '<data-my-table></data-my-table>'
-                     //   controller: 'scotchController'
+                        template: '<data-my-table my-type="scotch" my-service="BasketService"></data-my-table>'
+                                //   controller: 'scotchController'
                     }
                 }
 
@@ -79,7 +79,9 @@ routerApp.controller('basketCtrl', function ($scope, BasketService) {
 
     $scope.scotches = BasketService.getSelectedList();
 
-    $scope.$on('handleItemCount', function () {
+    var type = BasketService.getType();
+
+    $scope.$on('handle' + type + 'ItemCount', function () {
         $scope.itemCnt = BasketService.getSelectedCnt();
         $scope.scotches = BasketService.getSelectedList();
     });
@@ -117,53 +119,55 @@ routerApp.controller('CarouselCtrl', function CarouselCtrl($scope) {
 });
 
 
-var myTable = angular.module('myTable',[]);
-myTable.directive('myTable', function() {
+var myTable = angular.module('myTable', []);
+myTable.directive('myTable', function () {
     return {
-      scope: {
-        
-      },
-      templateUrl: 'table-data_1.html',
-      replace: true,
-      controller: 'scotchController',
-      controllerAs: 'ctrl'
+        scope: {
+        },
+        templateUrl: 'table-data_1.html',
+        replace: true,
+        controller: 'scotchController',
+        controllerAs: 'ctrl'
     };
-  });
-  
-myTable.controller('scotchController', function ($scope, BasketService) {
+});
 
-    $scope.message = 'test';
-    this.message="test2";
+myTable.controller('scotchController', function ($scope, $attrs, $injector) {
 
-    $scope.scotches = BasketService.getList();
+    var myService = $injector.get($attrs.myService);
 
-    BasketService.updateSelectedList($scope.scotches);
+    this.message = $attrs.myType;
+    this.message = "test2";
+    var type = $attrs.myType;
+    myService.setType(type);
+    this.scotches = myService.getList();
+
+    myService.updateSelectedList(this.scotches);
 
     // This property is bound to the checkbox in the table header
-    $scope.allItemsSelected = BasketService.allSelected();
+    this.allItemsSelected = myService.allSelected();
 
 // Fired when an entity in the table is checked
-    $scope.selectEntity = function () {
-        BasketService.updateSelectedList($scope.scotches);
+    this.selectEntity = function () {
+        myService.updateSelectedList(this.scotches);
 
     };
 
     // Fired when the checkbox in the table header is checked
-    $scope.selectAll = function () {
+    this.selectAll = function () {
         // Loop through all the entities and set their isChecked property
-        for (var i = 0; i < $scope.scotches.length; i++) {
-            $scope.scotches[i].selected = $scope.allItemsSelected;
+        for (var i = 0; i < this.scotches.length; i++) {
+            this.scotches[i].selected = this.allItemsSelected;
         }
 
-        BasketService.updateSelectedList($scope.scotches);
+        myService.updateSelectedList(this.scotches);
     };
 
-    $scope.$on('handleItemCount', function () {
-        $scope.allItemsSelected = BasketService.allSelected();
+    $scope.$on('handle' + type + 'ItemCount', function () {
+        this.allItemsSelected = myService.allSelected();
     });
 });
 
-routerApp.service('BasketService', function ($rootScope) {
+routerApp.service("ScotchService", function () {
     var scotches = [{
             name: 'Macallan 12',
             price: 50,
@@ -191,80 +195,128 @@ routerApp.service('BasketService', function ($rootScope) {
         }
     ];
 
-    var selectedList = [];
-
-    var allSelected = false;
-
-
     this.getList = function () {
-        console.log("BasketServer scotches "+scotches.length);
+       console.log("getList this"+ scotches.length);
         return scotches;
     };
+
+    var selectedList = [];
 
     this.getSelectedList = function () {
         return selectedList;
     };
 
-    this.updateSelectedList = function (value) {
+    this.getSelectedCnt = function () {
+        return selectedList.length;
+    };
+
+    this.setSelectedList = function (value) {
+        selectedList = value;
+    };
+
+    var allSelected = false;
+
+    this.setAllSelected = function (value) {
+        console.log("value length " + value.length);
+        allSelected = value;
+    };
+
+    this.getAllSelected = function () {
+        return allSelected;
+    };
+
+});
+
+routerApp.factory('BasketService', function ($rootScope, ScotchService) {
+    var service = {};
+    var type = '';
+
+
+    service.setType = function (value) {
+        this.type = value;
+    };
+
+    service.getType = function () {
+        return type;
+    };
+
+    service.getList = function () {
+        var list = [];
+        list= ScotchService.getList();
+        console.log("getList service"+ list);
+        return ScotchService.getList();
+    };
+
+    service.getSelectedList = function () {
+        return ScotchService.getSelectedList();
+    };
+
+    service.updateSelectedList = function (value) {
         var ret = [];
         for (var i = 0; i < value.length; i++) {
             if (value[i].selected)
                 ret.push(value[i]);
         }
 
-        selectedList = ret;
+        ScotchService.setSelectedList(ret);
         //debug
 
-        console.log("selected " + selectedList.length);
+        console.log("selected " + ScotchService.getSelectedList().length);
 
 
 
         var all_selected = true;
-        for (var i = 0; i < scotches.length; i++) {
-            if (!scotches[i].selected) {
+        var list = ScotchService.getList();
+        for (var i = 0; i < list.length; i++) {
+            if (!list[i].selected) {
                 all_selected = false;
                 break;
             }
         }
 
-        allSelected = all_selected;
-        console.log("allSelected is " + allSelected);
-        this.broadcastItemCount();
+        ScotchService.setAllSelected(all_selected);
+        console.log("allSelected is " + ScotchService.getAllSelected());
+        this.broadcastItemCount(type);
 
         return ret;
     };
 
-    this.broadcastItemCount = function () {
-        $rootScope.$broadcast('handleItemCount');
+    service.broadcastItemCount = function (type) {
+        $rootScope.$broadcast('handle' + type + 'ItemCount');
         //  $rootScope.$emit('handleItemCount');
     };
 
-    this.getSelectedCnt = function () {
-        console.log("get selected " + selectedList.length);
-        return selectedList.length;
+    service.getSelectedCnt = function () {
+     //   return 0;
+     //   console.log("get selected " + ScotchService.getSelectedCnt());
+        return ScotchService.getSelectedCnt();
     };
 
-    this.allSelected = function () {
-        console.log("get allSelected " + allSelected);
-        return allSelected;
+    service.allSelected = function () {
+        console.log("get allSelected " + ScotchService.getAllSelected());
+        return ScotchService.getAllSelected();
 
     };
 
-    this.unselect = function (value) {
-        for (var i = 0; i < scotches.length; i++) {
-            if (JSON.stringify(scotches[i]) === JSON.stringify(value)) {
-                scotches[i].selected = false;
+    service.unselect = function (value) {
+        var list = ScotchService.getList();
+        for (var i = 0; i < list.length; i++) {
+            if (JSON.stringify(list[i]) === JSON.stringify(value)) {
+                list[i].selected = false;
                 break;
             }
         }
-        this.updateSelectedList(scotches);
+        this.updateSelectedList(list);
     };
 
-    this.unselectAll = function () {
-        for (var i = 0; i < scotches.length; i++) {
-            scotches[i].selected = false;
+    service.unselectAll = function () {
+        var list = ScotchService.getList();
+        for (var i = 0; i < list.length; i++) {
+            list[i].selected = false;
         }
-        this.updateSelectedList(scotches);
+        this.updateSelectedList(list);
     };
+
+    return service;
 });
 
