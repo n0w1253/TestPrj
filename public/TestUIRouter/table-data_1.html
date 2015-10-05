@@ -1,6 +1,6 @@
 <div>
 <h2>Fine Scotches 2</h2>
-<h4>{{message}}</h4>
+<h4>{{ctrl.message}}</h4>
 <div>
     <span>Search: <input ng-model="query"></span>  
     <span> Sort by:<select ng-model="orderProp">
@@ -35,7 +35,7 @@
         <tr ng-repeat="scotch in filteredList = (ctrl.scotches | filter:query  | orderBy:orderProp) " ng-class="{selected: scotch.selected}"  class="phone-listing">
             <td>{{ scotch.name}}</td>
             <td>${{ scotch.price}}</td>
-            <td><input type="checkbox" ng-model="scotch.selected" ng-change="selectEntity()"/></td>
+            <td><input type="checkbox" ng-model="scotch.selected" ng-change="ctrl.selectEntity()"/></td>
           
         </tr>            <!--td><pre><code>{{ scotch | json }}</code></pre></td-->
 

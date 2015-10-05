@@ -46,7 +46,7 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
                     'columnRight@products': {template: 'Item Info Here!'},
                     // for column two, we'll define a separate controller 
                     'columnLeft@products': {
-                        template: '<data-my-table my-type="scotch" my-service="BasketService"></data-my-table>'
+                        template: '<data-my-table my-type="scotch"></data-my-table>'
                                 //   controller: 'scotchController'
                     }
                 }
@@ -75,23 +75,23 @@ routerApp.config(function ($stateProvider, $urlRouterProvider) {
 
 
 routerApp.controller('basketCtrl', function ($scope, BasketService) {
-    $scope.itemCnt = BasketService.getSelectedCnt();
+     var type = "scotch";
+     
+    $scope.itemCnt = BasketService.getSelectedCnt(type);
 
-    $scope.scotches = BasketService.getSelectedList();
-
-    var type = BasketService.getType();
+    $scope.scotches = BasketService.getSelectedList(type);
 
     $scope.$on('handle' + type + 'ItemCount', function () {
-        $scope.itemCnt = BasketService.getSelectedCnt();
-        $scope.scotches = BasketService.getSelectedList();
+        $scope.itemCnt = BasketService.getSelectedCnt(type);
+        $scope.scotches = BasketService.getSelectedList(type);
     });
 
     $scope.removeItem = function (value) {
-        BasketService.unselect(value);
+        BasketService.unselect(value,type);
     };
 
     $scope.removeAllItems = function () {
-        BasketService.unselectAll();
+        BasketService.unselectAll(type);
     };
 });
 
@@ -131,25 +131,25 @@ myTable.directive('myTable', function () {
     };
 });
 
-myTable.controller('scotchController', function ($scope, $attrs, $injector) {
+myTable.controller('scotchController', function ($scope, $attrs,BasketService) {
 
-    var myService = $injector.get($attrs.myService);
+   // var myService = $injector.get($attrs.myService);
 
     this.message = $attrs.myType;
-    this.message = "test2";
+   // this.message = "test2";
     var type = $attrs.myType;
-    myService.setType(type);
-    this.scotches = myService.getList();
+    BasketService.setType(type);
+    
+    this.scotches = BasketService.getList(type);
 
-    myService.updateSelectedList(this.scotches);
+    BasketService.updateSelectedList(this.scotches,type);
 
     // This property is bound to the checkbox in the table header
-    this.allItemsSelected = myService.allSelected();
+    this.allItemsSelected = BasketService.allSelected(type);
 
 // Fired when an entity in the table is checked
     this.selectEntity = function () {
-        myService.updateSelectedList(this.scotches);
-
+        BasketService.updateSelectedList(this.scotches,type);
     };
 
     // Fired when the checkbox in the table header is checked
@@ -159,11 +159,11 @@ myTable.controller('scotchController', function ($scope, $attrs, $injector) {
             this.scotches[i].selected = this.allItemsSelected;
         }
 
-        myService.updateSelectedList(this.scotches);
+        BasketService.updateSelectedList(this.scotches,type);
     };
 
     $scope.$on('handle' + type + 'ItemCount', function () {
-        this.allItemsSelected = myService.allSelected();
+        this.allItemsSelected = BasketService.allSelected(type);
     });
 });
 
@@ -240,18 +240,18 @@ routerApp.factory('BasketService', function ($rootScope, ScotchService) {
         return type;
     };
 
-    service.getList = function () {
+    service.getList = function (type) {
         var list = [];
         list= ScotchService.getList();
         console.log("getList service"+ list);
         return ScotchService.getList();
     };
 
-    service.getSelectedList = function () {
+    service.getSelectedList = function (type) {
         return ScotchService.getSelectedList();
     };
 
-    service.updateSelectedList = function (value) {
+    service.updateSelectedList = function (value,type) {
         var ret = [];
         for (var i = 0; i < value.length; i++) {
             if (value[i].selected)
@@ -275,30 +275,31 @@ routerApp.factory('BasketService', function ($rootScope, ScotchService) {
         }
 
         ScotchService.setAllSelected(all_selected);
-        console.log("allSelected is " + ScotchService.getAllSelected());
+        console.log("allSelected is " + ScotchService.getAllSelected()+ " type is "+type);
         this.broadcastItemCount(type);
 
         return ret;
     };
 
     service.broadcastItemCount = function (type) {
+        console.log("broadcastItemCount "+type);
         $rootScope.$broadcast('handle' + type + 'ItemCount');
         //  $rootScope.$emit('handleItemCount');
     };
 
-    service.getSelectedCnt = function () {
+    service.getSelectedCnt = function (type) {
      //   return 0;
      //   console.log("get selected " + ScotchService.getSelectedCnt());
         return ScotchService.getSelectedCnt();
     };
 
-    service.allSelected = function () {
+    service.allSelected = function (type) {
         console.log("get allSelected " + ScotchService.getAllSelected());
         return ScotchService.getAllSelected();
 
     };
 
-    service.unselect = function (value) {
+    service.unselect = function (value,type) {
         var list = ScotchService.getList();
         for (var i = 0; i < list.length; i++) {
             if (JSON.stringify(list[i]) === JSON.stringify(value)) {
@@ -306,15 +307,15 @@ routerApp.factory('BasketService', function ($rootScope, ScotchService) {
                 break;
             }
         }
-        this.updateSelectedList(list);
+        this.updateSelectedList(list,type);
     };
 
-    service.unselectAll = function () {
+    service.unselectAll = function (type) {
         var list = ScotchService.getList();
         for (var i = 0; i < list.length; i++) {
             list[i].selected = false;
         }
-        this.updateSelectedList(list);
+        this.updateSelectedList(list,type);
     };
 
     return service;
