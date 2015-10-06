@@ -78,12 +78,18 @@ routerApp.controller('basketCtrl', function ($scope, BasketService) {
      var type = "scotch";
      
     $scope.itemCnt = BasketService.getSelectedCnt(type);
+    
+    $scope.empty = true;
 
     $scope.scotches = BasketService.getSelectedList(type);
 
     $scope.$on('handle' + type + 'ItemCount', function () {
         $scope.itemCnt = BasketService.getSelectedCnt(type);
         $scope.scotches = BasketService.getSelectedList(type);
+      
+            $scope.empty = ($scope.itemCnt === 0);
+             console.log("set empty to "+$scope.empty);
+       
     });
 
     $scope.removeItem = function (value) {

@@ -7,9 +7,9 @@
             <th>Cost</th>
 
             <th title="remove all">
-                 <a href="" ng-click="removeAllItems()" >
-                            <i class="fa fa-minus-square"></i>
-                        </a>
+                <a href="" ng-click="removeAllItems()" >
+                    <i class="fa fa-minus-square"></i>
+                </a>
                 <!--input type="checkbox" ng-model="allItemsSelected" ng-change="selectAll()"-->
             </th>
         </tr>
@@ -20,13 +20,23 @@
             <td>{{ scotch.name}}</td>
             <td>${{ scotch.price}}</td>
             <td  title="remove">
-                        <a href="" ng-click="removeItem(scotch)" >
-                            <i class="fa fa-minus-square"></i>
-                        </a>
+                <a href="" ng-click="removeItem(scotch)" >
+                    <i class="fa fa-minus-square"></i>
+                </a>
             </td>
-          
+
         </tr>            <!--td><pre><code>{{ scotch | json }}</code></pre></td-->
 
 
     </tbody>
 </table>
+
+<button ng-click=""
+        class="btn btn-primary"
+        ng-class="{'disabled': itemCnt ===0 }"
+        popover="Please select at least one product to enable the button."
+        popover-placement="right"
+        popover-trigger="{{{true: 'mouseenter', false: 'never'}[itemCnt ===0]}}">
+    <span>Save</span>
+</button> 
+
